@@ -69,7 +69,7 @@ module Gruff
     #
     # Example: 0 => 2005, 3 => 2006, 5 => 2007, 7 => 2008
     attr_accessor :labels
-
+    
     # Used internally for spacing.
     #
     # By default, labels are centered over the point they represent.
@@ -80,6 +80,9 @@ module Gruff
 
     # A label for the bottom of the graph
     attr_accessor :x_axis_label
+    attr_accessor :show_x_axis_markers
+    attr_accessor :labels_rotation
+    attr_accessor :label_margin
 
     # A label for the left side of the graph
     attr_accessor :y_axis_label
@@ -241,6 +244,9 @@ module Gruff
       @theme_options = {}
 
       @x_axis_label = @y_axis_label = nil
+      @show_x_axis_markers = false
+      @labels_rotation = 0
+      @label_margin = LABEL_MARGIN
       @y_axis_increment = nil
       @stacked = nil
       @norm_data = nil
@@ -593,7 +599,7 @@ module Gruff
         # Shift graph if left line numbers are hidden
         line_number_width = @hide_line_numbers && !@has_left_labels ?
         0.0 :
-          (longest_left_label_width + LABEL_MARGIN * 2)
+          (longest_left_label_width + @label_margin * 2)
 
         @graph_left = @left_margin +
           line_number_width +
@@ -608,7 +614,7 @@ module Gruff
         @graph_right_margin = @right_margin + extra_room_for_long_label
 
         @graph_bottom_margin = @bottom_margin +
-          @marker_caps_height + LABEL_MARGIN
+          @marker_caps_height + @label_margin
       end
 
       @graph_right = @raw_columns - @graph_right_margin
@@ -621,7 +627,7 @@ module Gruff
         (@hide_legend ? legend_margin : @legend_caps_height + legend_margin)
 
       x_axis_label_height = @x_axis_label.nil? ? 0.0 :
-        @marker_caps_height + LABEL_MARGIN
+        @marker_caps_height + @label_margin
       @graph_bottom = @raw_rows - @graph_bottom_margin - x_axis_label_height
       @graph_height = @graph_bottom - @graph_top
     end
@@ -709,7 +715,7 @@ module Gruff
 
           # Vertically center with 1.0 for the height
           @d = @d.annotate_scaled( @base_image,
-                                   @graph_left - LABEL_MARGIN, 1.0,
+                                   @graph_left - @label_margin, 1.0,
                                    0.0, y,
                                    label(marker_label), @scale)
         end
@@ -858,7 +864,7 @@ module Gruff
       return if @hide_line_markers
 
       if !@labels[index].nil? && @labels_seen[index].nil?
-        y_offset = @graph_bottom + LABEL_MARGIN
+        y_offset = @graph_bottom + @label_margin
 
         @d.fill = @font_color
         @d.font = @font if @font
@@ -866,10 +872,11 @@ module Gruff
         @d.font_weight = NormalWeight
         @d.pointsize = scale_fontsize(@marker_font_size)
         @d.gravity = NorthGravity
-        @d = @d.annotate_scaled(@base_image,
-                                1.0, 1.0,
-                                x_offset, y_offset,
-                                @labels[index], @scale)
+        @d = @d.annotate_scaled( @base_image, 1.0, 1.0,
+          x_offset, y_offset, @labels[index], @scale, {
+          :rotation => @labels_rotation
+        })
+
         @labels_seen[index] = 1
         debug { @d.line 0.0, y_offset, @raw_columns, y_offset }
       end
@@ -1108,14 +1115,14 @@ module Magick
   class Draw
 
     # Additional method to scale annotation text since Draw.scale doesn't.
-    def annotate_scaled(img, width, height, x, y, text, scale)
+    def annotate_scaled( img, width, height, x, y, text, scale, extra_options = {} )
       scaled_width = (width * scale) >= 1 ? (width * scale) : 1
       scaled_height = (height * scale) >= 1 ? (height * scale) : 1
 
-      self.annotate( img,
-                     scaled_width, scaled_height,
-                     x * scale, y * scale,
-                     text)
+      self.annotate( img, scaled_width, scaled_height,
+        x * scale, y * scale, text ){
+           self.rotation = extra_options[:rotation].to_i
+        }
     end
 
   end

@@ -476,6 +476,8 @@ class TestGruffLine < GruffTestCase
     g.maximum_value = 30  
     g.minimum_value = 0   
     g.y_axis_increment	= 3
+    g.labels_rotation = -45
+    g.label_margin = 30
     
     g.theme = {
       :colors => ['#7F0099', '#2F85ED', '#2FED09','#EC962F'],
@@ -486,7 +488,7 @@ class TestGruffLine < GruffTestCase
     @datasets.each do |data|
       g.data(data[0], data[1])
     end
-    
+
     (0..@datasets.size+1).to_a.each do |item|
       g.labels[ item ] = "#{item + 1}"
     end
