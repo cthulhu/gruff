@@ -812,9 +812,9 @@ module Gruff
         @d = @d.stroke('transparent')
         @d = @d.fill @data[index][DATA_COLOR_INDEX]
         @d = @d.rectangle(current_x_offset,
-                          current_y_offset - legend_square_width / 2.0,
+                          current_y_offset - legend_square_width / 6.0,
                           current_x_offset + legend_square_width,
-                          current_y_offset + legend_square_width / 2.0)
+                          current_y_offset + legend_square_width / 6.0)
 
         @d.pointsize = @legend_font_size
         metrics = @d.get_type_metrics(@base_image, legend_label.to_s)
@@ -880,6 +880,7 @@ module Gruff
         
         @labels_seen[index] = 1
         if @show_x_axis_markers
+          @d.fill @marker_color
           @d.line x_offset, y_offset - @label_margin / 2, x_offset , @graph_top
         end
         debug { @d.line 0.0, y_offset, @raw_columns, y_offset }
