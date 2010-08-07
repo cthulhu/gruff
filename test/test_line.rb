@@ -478,6 +478,7 @@ class TestGruffLine < GruffTestCase
     g.y_axis_increment	= 3
     g.labels_rotation = -45
     g.label_margin = 30
+    g.show_x_axis_markers = true
     
     g.theme = {
       :colors => ['#7F0099', '#2F85ED', '#2FED09','#EC962F'],
