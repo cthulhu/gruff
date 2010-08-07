@@ -449,7 +449,8 @@ class TestGruffLine < GruffTestCase
     g.write('test/output/line_no_hide.png')
   end
   
-
+=begin
+  # TODO wait until in main branch will apear the fix for that
   def test_jruby_error
     g = Gruff::Line.new
     g.theme = {
@@ -465,6 +466,33 @@ class TestGruffLine < GruffTestCase
     g.label_max_decimals = 1
 
     g.write('test/output/line_jruby_error.png')
+  end
+=end
+
+
+  def test_y_axis_settings
+    g = Gruff::Line.new
+    
+    g.maximum_value = 30  
+    g.minimum_value = 0   
+    g.y_axis_increment	= 3
+    
+    g.theme = {
+      :colors => ['#7F0099', '#2F85ED', '#2FED09','#EC962F'],
+      :marker_color => '#aaa',
+      :background_colors => ['#E8E8E8','#B9FD6C']
+    }
+    
+    @datasets.each do |data|
+      g.data(data[0], data[1])
+    end
+    
+    (0..@datasets.size+1).to_a.each do |item|
+      g.labels[ item ] = "#{item + 1}"
+    end
+
+    g.write('test/output/y_axis_settings.png')
+    g.to_blob
   end
 
 private
