@@ -21,6 +21,7 @@
   mini/bar
   mini/pie
   mini/side_bar
+  o_f_c_bind
 ).each do |filename|
   require File.dirname(__FILE__) + "/gruff/#{filename}"
 end

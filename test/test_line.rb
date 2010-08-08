@@ -512,10 +512,7 @@ class TestGruffLine < GruffTestCase
     end
 
     g.data("Apples", data )
-
-    
     g.write('test/output/y_axis_settings.png')
-    g.to_blob
   end
 
 private
