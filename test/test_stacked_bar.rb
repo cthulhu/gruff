@@ -50,7 +50,7 @@ class TestGruffStackedBar < GruffTestCase
   end
   
   def test_bars_with_opacity_and_custom_colors
-    g = Gruff::StackedBar.new( "390x300" )
+    g = Gruff::StackedBar.new( "690x600" )
     data = []
     (0..30).to_a.each do |month|
       g.labels[ month ] = sprintf( "%02d", month + 1 )
@@ -63,6 +63,7 @@ class TestGruffStackedBar < GruffTestCase
     g.labels_rotation = -45
     g.label_margin = 25
     g.bottom_margin = 10
+    g.bar_opacity = 0.6
 
     g.theme = {
       :marker_color => 'lightgray',

@@ -7,6 +7,7 @@ class Gruff::StackedBar < Gruff::Base
 
     # Spacing factor applied between bars
     attr_accessor :bar_spacing
+    attr_accessor :bar_opacity
     
     # Draws a bar graph, but multiple sets are stacked on top of each other.
     def draw
@@ -18,9 +19,10 @@ class Gruff::StackedBar < Gruff::Base
       #
       # Columns sit stacked.
       @bar_spacing ||= 0.9
-      @bar_width = @graph_width / @column_count.to_f
+      @bar_opacity ||= 1
+      @bar_width = ( @graph_width / @column_count.to_f ) - ( @graph_width / @column_count.to_f ) * (1 - @bar_spacing) / 2
       padding = (@bar_width * (1 - @bar_spacing)) / 2
-    
+      
       @d = @d.stroke_opacity 0.0
       
       height = Array.new(@column_count, 0)
@@ -44,7 +46,7 @@ class Gruff::StackedBar < Gruff::Base
           
           # update the total height of the current stacked bar
           height[point_index] += (data_point * @graph_height ) 
-
+          @d = @d.opacity @bar_opacity
           @d = @d.rectangle(left_x, left_y, right_x, right_y)
           
         end
