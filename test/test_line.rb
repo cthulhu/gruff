@@ -471,7 +471,7 @@ class TestGruffLine < GruffTestCase
 
 
   def test_y_axis_settings
-    g = Gruff::Line.new
+    g = Gruff::Line.new( "290x200" )
     
     g.maximum_value = 30  
     g.minimum_value = 0   
@@ -480,20 +480,40 @@ class TestGruffLine < GruffTestCase
     g.label_margin = 30
     g.show_x_axis_markers = true
     
+    g.hide_title = true
+    g.sort = false
+
+
+    g.maximum_value = 30  
+    g.minimum_value = 0   
+    g.y_axis_increment	= 3
+
+    g.dot_radius = 0.5
+    g.hide_dots = false
+    g.show_x_axis_markers = true
+
+    g.marker_font_size = 27.0
+    g.legend_font_size = 30.0
+
+    g.labels_rotation = -45
+    g.label_margin = 25
+    g.bottom_margin = 10    
+    
     g.theme = {
-      :colors => ['#7F0099', '#2F85ED', '#2FED09','#EC962F'],
-      :marker_color => '#aaa',
-      :background_colors => ['#E8E8E8','#B9FD6C']
+      :marker_color => 'lightgray',
+      :colors => %w(red),
+      :background_colors => ['#F3F3F3', '#F3F3F3']
     }
     
-    @datasets.each do |data|
-      g.data(data[0], data[1])
+    data = []
+    (0..30).to_a.each do |month|
+      g.labels[ month ] = sprintf( "%02d", month + 1 )
+      data << rand() * 30
     end
 
-    (0..@datasets.size+1).to_a.each do |item|
-      g.labels[ item ] = "#{item + 1}"
-    end
+    g.data("Apples", data )
 
+    
     g.write('test/output/y_axis_settings.png')
     g.to_blob
   end
