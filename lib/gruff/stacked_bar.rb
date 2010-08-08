@@ -27,11 +27,11 @@ class Gruff::StackedBar < Gruff::Base
     
       @norm_data.each_with_index do |data_row, row_index|      
         data_row[DATA_VALUES_INDEX].each_with_index do |data_point, point_index|
-          @d = @d.fill data_row[DATA_COLOR_INDEX]
-          
+
           # Calculate center based on bar_width and current row
           label_center = @graph_left + (@bar_width * point_index) + (@bar_width * @bar_spacing / 2.0)
           draw_label(label_center, point_index)
+          @d = @d.fill data_row[DATA_COLOR_INDEX]
 
           next if (data_point == 0)
           # Use incremented x and scaled y
@@ -44,7 +44,7 @@ class Gruff::StackedBar < Gruff::Base
           
           # update the total height of the current stacked bar
           height[point_index] += (data_point * @graph_height ) 
-          
+
           @d = @d.rectangle(left_x, left_y, right_x, right_y)
           
         end
