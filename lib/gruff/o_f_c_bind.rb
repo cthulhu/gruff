@@ -28,13 +28,45 @@ protected
       @graph_object = Gruff::StackedBar.new( @dimensions )
     else
       @graph_object = Gruff::Line.new( @dimensions )
+      return
     end
-#    @graph_object = 
-#    @graph_object.theme = {
-#      :marker_color => 'lightgray',
-#      :background_colors => ['#F3F3F3', '#F3F3F3']
-#    }
+    # labels and axises
+    puts @options["y_axis"].inspect
+    
+    @graph_object.minimum_value = @options["y_axis"]["min"]
+    @graph_object.maximum_value = @options["y_axis"]["max"]
+    @graph_object.y_axis_increment = @options["y_axis"]["steps"]
+    @graph_object.show_x_axis_markers = true
+    
+    case @options["x_axis"]["labels"]["rotate"]
+    when "diagonal"
+      @graph_object.labels_rotation = -45
+    end
+    @options["x_axis"]["labels"]["labels"].each_with_index do |label, index|
+      @graph_object.labels[ index ] = label
+    end
+    # theme pickup
+    @graph_object.theme = {
+      :marker_color => @options["x_axis"]["grid-colour"],
+      :background_colors => [ @options["bg_colour"], @options["bg_colour"] ]
+    }
+    
+    #title
+    @graph_object.title = @options["title"]["text"]
+    
+    #data
+    @graph_object.data_opacity = @options["elements"][0]["alpha"]
 
+    (0..@options["elements"][0]["values"][0].size - 1).to_a.each do |data_item|
+      name = ( @options["elements"][0]["values"].map{|col| col[data_item]["tip"].to_s.strip }.uniq.find{|i| i != "" } || "" ).scan( /([^<]*).*/ )
+      puts name
+      @graph_object.data( 
+        name, 
+        @options["elements"][0]["values"].map{|col| col[data_item]["val"] }, 
+        @options["elements"][0]["values"][0][data_item]["colour"] 
+      )
+    end
+   
   end
   
 end

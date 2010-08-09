@@ -63,7 +63,7 @@ class TestGruffStackedBar < GruffTestCase
     g.labels_rotation = -45
     g.label_margin = 25
     g.bottom_margin = 10
-    g.bar_opacity = 0.6
+    g.data_opacity = 0.6
 
     g.theme = {
       :marker_color => 'lightgray',

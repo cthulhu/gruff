@@ -94,6 +94,7 @@ module Gruff
 
     # Get or set the list of colors that will be used to draw the bars or lines.
     attr_accessor :colors
+    attr_accessor :data_opacity
 
     # The large title of the graph displayed at the top
     attr_accessor :title
@@ -250,6 +251,7 @@ module Gruff
       @y_axis_increment = nil
       @stacked = nil
       @norm_data = nil
+      @data_opacity ||= 0
     end
 
     # Sets the top, bottom, left and right margins to +margin+.
@@ -780,12 +782,14 @@ module Gruff
 
       label_widths = [[]] # Used to calculate line wrap
       @legend_labels.each do |label|
-        metrics = @d.get_type_metrics(@base_image, label.to_s)
-        label_width = metrics.width + legend_square_width * 2.7
-        label_widths.last.push label_width
+        unless label.to_s.empty?
+          metrics = @d.get_type_metrics(@base_image, label.to_s)
+          label_width = metrics.width + legend_square_width * 2.7
+          label_widths.last.push label_width
 
-        if sum(label_widths.last) > (@raw_columns * 0.9)
-          label_widths.push [label_widths.last.pop]
+          if sum(label_widths.last) > (@raw_columns * 0.9)
+            label_widths.push [label_widths.last.pop]
+          end
         end
       end
 
@@ -795,7 +799,7 @@ module Gruff
         @top_margin + title_margin + @title_caps_height
 
       @legend_labels.each_with_index do |legend_label, index|
-
+        next if legend_label.to_s.empty?
         # Draw label
         @d.fill = @font_color
         @d.font = @font if @font
