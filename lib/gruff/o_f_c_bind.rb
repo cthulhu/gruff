@@ -26,12 +26,13 @@ protected
     case @options["elements"][0]["type"]
     when "bar_stack"
       @graph_object = Gruff::StackedBar.new( @dimensions )
+    when "line"
+      @graph_object = Gruff::Line.new( @dimensions )
     else
       @graph_object = Gruff::Line.new( @dimensions )
       return
     end
     # labels and axises
-    puts @options["y_axis"].inspect
     
     @graph_object.minimum_value = @options["y_axis"]["min"]
     @graph_object.maximum_value = @options["y_axis"]["max"]
@@ -56,14 +57,20 @@ protected
     
     #data
     @graph_object.data_opacity = @options["elements"][0]["alpha"]
-
-    (0..@options["elements"][0]["values"][0].size - 1).to_a.each do |data_item|
-      name = ( @options["elements"][0]["values"].map{|col| col[data_item]["tip"].to_s.strip }.uniq.find{|i| i != "" } || "" ).scan( /([^<]*).*/ )
-      puts name
+    if @options["elements"][0]["values"][0].is_a? Array
+      (0..@options["elements"][0]["values"][0].size - 1).to_a.each do |data_item|
+        name = ( @options["elements"][0]["values"].map{|col| col[data_item]["tip"].to_s.strip }.uniq.find{|i| i != "" } || "" ).scan( /([^<]*).*/ )
+        @graph_object.data( 
+          name, 
+          @options["elements"][0]["values"].map{|col| col[data_item]["val"] }, 
+          @options["elements"][0]["values"][0][data_item]["colour"] 
+        )
+      end
+    else
       @graph_object.data( 
-        name, 
-        @options["elements"][0]["values"].map{|col| col[data_item]["val"] }, 
-        @options["elements"][0]["values"][0][data_item]["colour"] 
+        @options["elements"][0]["text"], 
+        @options["elements"][0]["values"], 
+        @options["elements"][0]["colour"] 
       )
     end
    

@@ -847,47 +847,47 @@ module Gruff
 
     # Draws a title on the graph.
     def draw_title
-      return if (@hide_title || @title.nil?)
-
-      @d.fill = @font_color
-      @d.font = @font if @font
-      @d.stroke('transparent')
-      @d.pointsize = scale_fontsize(@title_font_size)
-      @d.font_weight = BoldWeight
-      @d.gravity = NorthGravity
-      @d = @d.annotate_scaled( @base_image,
-                               @raw_columns, 1.0,
-                               0, @top_margin,
-                               @title, @scale)
+      unless ( @hide_title || @title.nil? || @title.empty? )
+        @d.fill = @font_color
+        @d.font = @font if @font
+        @d.stroke('transparent')
+        @d.pointsize = scale_fontsize(@title_font_size)
+        @d.font_weight = BoldWeight
+        @d.gravity = NorthGravity
+        @d = @d.annotate_scaled( @base_image,
+                                 @raw_columns, 1.0,
+                                 0, @top_margin,
+                                 @title, @scale)
+      end
     end
 
     # Draws column labels below graph, centered over x_offset
     #--
     # TODO Allow WestGravity as an option
     def draw_label(x_offset, index)
-      return if @hide_line_markers
+      unless @hide_line_markers
+        if !@labels[index].nil? && @labels_seen[index].nil?
+          y_offset = @graph_bottom + @label_margin
 
-      if !@labels[index].nil? && @labels_seen[index].nil?
-        y_offset = @graph_bottom + @label_margin
-
-        @d.fill = @font_color
-        @d.font = @font if @font
-        @d.stroke('transparent')
-        @d.font_weight = NormalWeight
-        @d.pointsize = scale_fontsize(@marker_font_size)
-        @d.gravity = NorthGravity
-        
-        @d = @d.annotate_scaled( @base_image, 1.0, 1.0,
-          x_offset, y_offset, @labels[index], @scale, {
-          :rotation => @labels_rotation
-        })
-        
-        @labels_seen[index] = 1
-        if @show_x_axis_markers
-          @d.fill @marker_color
-          @d.line x_offset, y_offset - @label_margin / 2, x_offset , @graph_top
+          @d.fill = @font_color
+          @d.font = @font if @font
+          @d.stroke('transparent')
+          @d.font_weight = NormalWeight
+          @d.pointsize = scale_fontsize(@marker_font_size)
+          @d.gravity = NorthGravity
+          
+          @d = @d.annotate_scaled( @base_image, 1.0, 1.0,
+            x_offset, y_offset, @labels[index], @scale, {
+            :rotation => @labels_rotation
+          })
+          
+          @labels_seen[index] = 1
+          if @show_x_axis_markers
+            @d.fill @marker_color
+            @d.line x_offset, y_offset - @label_margin / 2, x_offset , @graph_top
+          end
+          debug { @d.line 0.0, y_offset, @raw_columns, y_offset }
         end
-        debug { @d.line 0.0, y_offset, @raw_columns, y_offset }
       end
     end
 
