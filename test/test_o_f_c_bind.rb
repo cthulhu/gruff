@@ -14,13 +14,25 @@ class TestOFCBind < GruffTestCase
     g.write('test/output/ofc_bind_zero_values_bar.png')
     g.to_blob    
   end
-  
+
+  def test_zero_values_lines
+    g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/zero_values_bar.json' ) )
+    g.write('test/output/ofc_bind_zero_values_bar.png')
+    g.to_blob    
+  end
+    
   def test_lines
-    g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/line.json' ) )
-    g.write('test/output/ofc_bind_line.png')
+    g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/zero_values_line.json' ) )
+    g.write('test/output/ofc_bind_zero_values_line.png')
     g.to_blob
   end
-  
+
+  def test_lines
+    g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/crashed_line.json' ) )
+    g.write('test/output/ofc_bind_crashed_line.png')
+    g.to_blob
+  end
+
   def test_no_data
     g1 = Gruff::OFCBind.new()
     g1.write('test/output/ofc_bind_no_data1.png')

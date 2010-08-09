@@ -37,7 +37,7 @@ class Gruff::StackedBar < Gruff::Base
           # Use incremented x and scaled y
           left_x = @graph_left + (@bar_width * point_index) + padding
           left_y = @graph_top + (@graph_height -
-                                 data_point * @graph_height - 
+                                 data_point.to_f * @graph_height - 
                                  height[point_index]) + 1
           right_x = left_x + @bar_width * @bar_spacing
           right_y = @graph_top + @graph_height - height[point_index] - 1

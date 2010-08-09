@@ -18,8 +18,12 @@ class Gruff::OFCBind
     build_object
   end
   
-  def method_missing name, *args,  &block
-    @graph_object.send( name, *args, &block )
+  def method_missing name, *args
+    if args.empty?
+      @graph_object.send name
+    else
+      @graph_object.send name, args 
+    end
   end
 protected
   def build_object
@@ -36,7 +40,10 @@ protected
     
     @graph_object.minimum_value = @options["y_axis"]["min"]
     @graph_object.maximum_value = @options["y_axis"]["max"]
-    @graph_object.y_axis_increment = @options["y_axis"]["steps"]
+
+    @graph_object.y_axis_increment = @options["y_axis"]["steps"].to_i.zero? ? 
+      1 :  @options["y_axis"]["steps"].to_i
+      
     @graph_object.show_x_axis_markers = true
     
     case @options["x_axis"]["labels"]["rotate"]
@@ -60,11 +67,10 @@ protected
     @graph_object.data_opacity = @options["elements"][0]["alpha"]
     if @options["elements"][0]["values"][0].is_a? Array
       (0..@options["elements"][0]["values"][0].size - 1).to_a.each do |data_item|
-        puts @options["elements"][0]["values"].map{|col| col[data_item]["val"] }.inspect
         name = ( @options["elements"][0]["values"].map{|col| col[data_item]["tip"].to_s.strip }.uniq.find{|i| i != "" } || "" ).scan( /([^<]*).*/ )
         data = @options["elements"][0]["values"].map{|col| col[data_item]["val"] }
         ( labels_amount - data.size ).times do
-          data << 0.0
+          data << nil
         end
         @graph_object.data( 
           name, 
@@ -73,9 +79,14 @@ protected
         )
       end
     else
+      data = @options["elements"][0]["values"]
+      ( labels_amount - data.size ).times do
+        data << nil
+      end
+
       @graph_object.data( 
         @options["elements"][0]["text"], 
-        @options["elements"][0]["values"], 
+        data, 
         @options["elements"][0]["colour"] 
       )
     end
