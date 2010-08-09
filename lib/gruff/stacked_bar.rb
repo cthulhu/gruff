@@ -33,17 +33,17 @@ class Gruff::StackedBar < Gruff::Base
           draw_label(label_center, point_index)
           @d = @d.fill data_row[DATA_COLOR_INDEX]
 
-          next if (data_point == 0)
+          next if data_point.nil? || data_point.to_f == 0.0
           # Use incremented x and scaled y
           left_x = @graph_left + (@bar_width * point_index) + padding
           left_y = @graph_top + (@graph_height -
-                                 data_point.to_f * @graph_height - 
+                                 data_point * @graph_height - 
                                  height[point_index]) + 1
           right_x = left_x + @bar_width * @bar_spacing
           right_y = @graph_top + @graph_height - height[point_index] - 1
           
           # update the total height of the current stacked bar
-          height[point_index] += (data_point.to_f * @graph_height ) 
+          height[point_index] += (data_point * @graph_height ) 
           @d = @d.fill_opacity @data_opacity
           @d = @d.rectangle(left_x, left_y, right_x, right_y)
           @d = @d.fill_opacity 0
