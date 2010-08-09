@@ -19,7 +19,11 @@ class Gruff::OFCBind
   end
   
   def method_missing name, *args
-    @graph_object.send name, args
+    if args.empty?
+      @graph_object.send name
+    else
+      @graph_object.send name, args 
+    end
   end
 protected
   def build_object

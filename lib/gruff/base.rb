@@ -497,7 +497,7 @@ module Gruff
     end
 
     # Return the graph as a rendered binary blob.
-    def to_blob(fileformat='PNG')
+    def to_blob( fileformat = 'PNG' )
       draw()
       return @base_image.to_blob do
         self.format = fileformat
