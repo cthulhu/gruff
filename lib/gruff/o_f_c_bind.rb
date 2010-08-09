@@ -43,6 +43,7 @@ protected
     when "diagonal"
       @graph_object.labels_rotation = -45
     end
+    labels_amount = @options["x_axis"]["labels"]["labels"].size
     @options["x_axis"]["labels"]["labels"].each_with_index do |label, index|
       @graph_object.labels[ index ] = label
     end
@@ -59,10 +60,15 @@ protected
     @graph_object.data_opacity = @options["elements"][0]["alpha"]
     if @options["elements"][0]["values"][0].is_a? Array
       (0..@options["elements"][0]["values"][0].size - 1).to_a.each do |data_item|
+        puts @options["elements"][0]["values"].map{|col| col[data_item]["val"] }.inspect
         name = ( @options["elements"][0]["values"].map{|col| col[data_item]["tip"].to_s.strip }.uniq.find{|i| i != "" } || "" ).scan( /([^<]*).*/ )
+        data = @options["elements"][0]["values"].map{|col| col[data_item]["val"] }
+        ( labels_amount - data.size ).times do
+          data << 0.0
+        end
         @graph_object.data( 
           name, 
-          @options["elements"][0]["values"].map{|col| col[data_item]["val"] }, 
+          data, 
           @options["elements"][0]["values"][0][data_item]["colour"] 
         )
       end

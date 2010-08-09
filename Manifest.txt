@@ -48,6 +48,7 @@ lib/gruff/mini/side_bar.rb
 lib/gruff/net.rb
 lib/gruff/photo_bar.rb
 lib/gruff/pie.rb
+lib/gruff/o_f_c_bind.rb
 lib/gruff/scene.rb
 lib/gruff/side_bar.rb
 lib/gruff/side_stacked_bar.rb
@@ -79,3 +80,4 @@ test/test_sidestacked_bar.rb
 test/test_spider.rb
 test/test_stacked_area.rb
 test/test_stacked_bar.rb
+test/test_o_f_c_bind.rb

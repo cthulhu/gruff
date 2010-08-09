@@ -7,6 +7,11 @@ class TestOFCBind < GruffTestCase
     g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/stack_bar.json' ) )
     g.write('test/output/ofc_bind_stack_bar.png')
   end
+
+  def test_zero_values_bar
+    g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/zero_values_bar.json' ) )
+    g.write('test/output/ofc_bind_zero_values_bar.png')
+  end
   
   def test_lines
     g = Gruff::OFCBind.new( "690x600", File.read( File.dirname(__FILE__) + '/ofc_bind_samples/line.json' ) )
