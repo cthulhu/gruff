@@ -43,7 +43,7 @@ class Gruff::StackedBar < Gruff::Base
           right_y = @graph_top + @graph_height - height[point_index] - 1
           
           # update the total height of the current stacked bar
-          height[point_index] += (data_point * @graph_height ) 
+          height[point_index] += (data_point.to_f * @graph_height ) 
           @d = @d.fill_opacity @data_opacity
           @d = @d.rectangle(left_x, left_y, right_x, right_y)
           @d = @d.fill_opacity 0
